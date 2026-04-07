@@ -2,295 +2,687 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no">
-<title>Pulsar Predictivo — Generador de Diagramas</title>
-<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Rajdhani:wght@300;400;500;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>DATESEG MX — Centro de Mando</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=Rajdhani:wght@300;400;500;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
 <style>
-:root{
-  --bg:#0A0A0F;--bg2:#12121A;--bg3:#1A1A25;
-  --red:#F06878;--redD:#A52030;--redG:rgba(232,25,44,0.15);
-  --white:#F5F5F5;--lgray:#8899AA;--gray:#3A4455;--border:#2A2A38;
-  --green:#00E676;--cyan:#00D4FF;--gold:#F5A623;--purple:#A855F7;
-}
+:root{--bg:#07090F;--bg2:#0C0F18;--bg3:#111620;--card:#121820;--border:#1E2535;--red:#F06878;--redD:#A52030;--blue:#4488FF;--green:#00E676;--amber:#FFB300;--text:#E8ECF4;--muted:#5A6A80;--muted2:#3A4555}
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--white);font-family:'Rajdhani',sans-serif}
-.app{display:flex;flex-direction:column;height:100vh;max-width:900px;margin:0 auto}
+body{background:var(--bg);color:var(--text);font-family:'Rajdhani',sans-serif;min-height:100vh}
+button{cursor:pointer;border:none;font-family:inherit}
+input,select,textarea{font-family:inherit;outline:none;background:var(--bg2);border:1px solid var(--border);color:var(--text);border-radius:6px;padding:8px 10px;font-size:12px;width:100%}
 
-/* HEADER */
-.hdr{background:linear-gradient(180deg,#12000A,#0A0A0F);border-bottom:2px solid var(--red);padding:6px 10px;display:flex;align-items:center;gap:10px;flex-shrink:0}
-.hdr-eye{width:36px;height:36px;background:linear-gradient(135deg,var(--red),var(--redD));border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;box-shadow:0 0 20px rgba(232,25,44,0.4)}
-.hdr h1{font-family:'Orbitron',sans-serif;font-size:12px;font-weight:800;letter-spacing:2px;color:var(--white)}
-.hdr p{font-size:8px;color:var(--red);letter-spacing:2px}
-.hdr-badge{margin-left:auto;background:var(--redG);border:1px solid rgba(232,25,44,0.3);border-radius:6px;padding:3px 10px;font-size:8px;font-weight:700;color:var(--red);letter-spacing:1px}
+/* ═══ HEADER ═══ */
+.header{background:var(--bg2);border-bottom:1px solid var(--border);padding:10px 16px;display:flex;align-items:center;gap:10px;position:sticky;top:0;z-index:100}
+.h-logo{font-family:'Orbitron',sans-serif;font-size:14px;font-weight:900;color:var(--red);letter-spacing:2px}
+.h-sub{font-size:9px;color:var(--muted);letter-spacing:1px}
+.h-right{margin-left:auto;display:flex;gap:6px;align-items:center}
+.h-badge{font-size:8px;padding:3px 8px;border-radius:10px;font-weight:700;letter-spacing:1px}
+.h-badge.on{background:rgba(0,230,118,0.1);color:var(--green);border:1px solid rgba(0,230,118,0.2)}
+.h-badge.off{background:rgba(240,104,120,0.1);color:var(--red);border:1px solid rgba(240,104,120,0.2)}
 
-/* CONTROLS */
-.ctrl{padding:6px 8px;display:flex;flex-direction:column;gap:4px;flex-shrink:0;border-bottom:1px solid var(--border)}
-.ctrl-row{display:flex;gap:8px;align-items:center}
-.ctrl select,.ctrl input{flex:1;background:var(--bg2);border:1px solid var(--border);border-radius:6px;padding:6px 8px;color:var(--white);font-family:'Rajdhani',sans-serif;font-size:12px;font-weight:600;outline:none}
-.ctrl select:focus,.ctrl input:focus{border-color:var(--red)}
-.ctrl select option{background:var(--bg2)}
-.btn{background:linear-gradient(135deg,var(--red),var(--redD));color:#fff;border:none;border-radius:8px;padding:8px 16px;font-family:'Rajdhani',sans-serif;font-weight:700;font-size:11px;letter-spacing:1px;cursor:pointer;white-space:nowrap}
-.btn:hover{box-shadow:0 0 20px rgba(232,25,44,0.4)}
-.btn.sec{background:var(--bg3);border:1px solid var(--border)}
-.btn.sec:hover{border-color:var(--red)}
+/* ═══ TABS ═══ */
+.tabs{display:flex;overflow-x:auto;background:var(--bg2);border-bottom:1px solid var(--border);padding:0 8px;gap:2px}
+.tab{padding:10px 14px;font-size:11px;font-weight:600;color:var(--muted);background:none;letter-spacing:0.5px;border-bottom:2px solid transparent;white-space:nowrap;transition:all 0.2s}
+.tab.active{color:var(--red);border-bottom-color:var(--red)}
+.tab:hover{color:var(--text)}
 
-/* FILTERS */
-.filters{padding:3px 8px;display:flex;gap:3px;flex-wrap:nowrap;flex-shrink:0;overflow-x:auto}
-.fbtn{padding:3px 7px;border-radius:5px;font-size:8px;font-weight:700;letter-spacing:0.5px;cursor:pointer;border:1px solid var(--border);background:var(--bg2);color:var(--lgray);transition:all 0.15s}
-.fbtn.active{color:#fff;border-color:currentColor}
-.fbtn[data-cat="sensor"].active{color:var(--cyan);background:rgba(0,212,255,0.1)}
-.fbtn[data-cat="actuator"].active{color:var(--gold);background:rgba(245,166,35,0.1)}
-.fbtn[data-cat="power"].active{color:var(--red);background:var(--redG)}
-.fbtn[data-cat="can"].active{color:var(--green);background:rgba(0,230,118,0.1)}
-.fbtn[data-cat="diag"].active{color:var(--purple);background:rgba(168,85,247,0.1)}
-.fbtn[data-cat="all"].active{color:var(--white);background:rgba(255,255,255,0.08)}
+/* ═══ PANELS ═══ */
+.panel{display:none;padding:12px;max-width:800px;margin:0 auto}
+.panel.active{display:block}
+.card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:14px;margin-bottom:10px}
+.card-title{font-size:11px;font-weight:700;color:var(--red);letter-spacing:1.5px;margin-bottom:8px}
 
-/* INFO BAR */
-.info{padding:3px 8px;font-size:8px;color:var(--lgray);display:flex;justify-content:space-between;flex-shrink:0}
-.info .tag{background:var(--redG);color:var(--red);padding:2px 8px;border-radius:4px;font-weight:700;letter-spacing:0.5px}
+/* ═══ DASHBOARD GRID ═══ */
+.dash-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px}
+.dash-item{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:14px;text-align:center;cursor:pointer;transition:all 0.2s}
+.dash-item:hover{border-color:var(--red);transform:translateY(-1px)}
+.dash-icon{font-size:28px;margin-bottom:4px}
+.dash-label{font-size:10px;font-weight:700;color:var(--text);letter-spacing:1px}
+.dash-value{font-family:'Orbitron',sans-serif;font-size:20px;font-weight:900;color:var(--red);margin:4px 0}
+.dash-sub{font-size:9px;color:var(--muted)}
 
-/* CANVAS AREA */
-.canvas-wrap{flex:1;overflow:auto;position:relative;background:#050510}
-#diagramCanvas{display:block;width:100%}
+/* ═══ STATS ROW ═══ */
+.stats-row{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}
+.stat{background:var(--card);border:1px solid var(--border);border-radius:6px;padding:6px 10px;font-size:10px;color:var(--muted);flex:1;min-width:80px;text-align:center}
+.stat b{display:block;font-size:14px;color:var(--text);font-family:'Orbitron',sans-serif}
 
-/* PIN TABLE */
-.pin-table-wrap{max-height:35vh;overflow-y:auto;border-top:1px solid var(--border);flex-shrink:0}
-.pin-table{width:100%;border-collapse:collapse;font-size:10px}
-.pin-table th{background:var(--bg3);color:var(--red);font-weight:700;padding:6px 8px;text-align:left;position:sticky;top:0;letter-spacing:1px;font-size:9px}
-.pin-table td{padding:5px 8px;border-bottom:1px solid rgba(255,255,255,0.03)}
-.pin-table tr:hover td{background:rgba(232,25,44,0.05)}
-.pin-table .color-dot{width:12px;height:12px;border-radius:3px;display:inline-block;border:1px solid rgba(255,255,255,0.2);vertical-align:middle;margin-right:4px}
-.pin-table .cat-tag{font-size:7px;font-weight:700;letter-spacing:0.5px;padding:1px 5px;border-radius:3px;text-transform:uppercase}
-.cat-sensor{background:rgba(0,212,255,0.15);color:var(--cyan)}
-.cat-actuator{background:rgba(245,166,35,0.15);color:var(--gold)}
-.cat-power{background:var(--redG);color:var(--red)}
-.cat-can{background:rgba(0,230,118,0.15);color:var(--green)}
-.cat-diag{background:rgba(168,85,247,0.15);color:var(--purple)}
-.hidden-row{display:none}
+/* ═══ PRODUCT TABLE ═══ */
+.prod-table{width:100%;border-collapse:collapse;font-size:11px}
+.prod-table th{text-align:left;padding:6px 8px;color:var(--red);font-size:9px;letter-spacing:1px;border-bottom:1px solid var(--border)}
+.prod-table td{padding:6px 8px;border-bottom:1px solid rgba(30,37,53,0.5)}
+.prod-table tr:hover td{background:rgba(240,104,120,0.03)}
 
-/* TOAST */
-.toast{position:fixed;bottom:60px;left:50%;transform:translateX(-50%);background:var(--bg3);border:1px solid var(--red);color:var(--white);padding:8px 20px;border-radius:8px;font-size:11px;font-weight:600;z-index:999;opacity:0;transition:opacity 0.3s;pointer-events:none}
-.toast.show{opacity:1}
+/* ═══ BUTTONS ═══ */
+.btn{background:linear-gradient(135deg,var(--red),var(--redD));color:#fff;border-radius:6px;padding:8px 14px;font-weight:700;font-size:11px;letter-spacing:0.5px;display:inline-flex;align-items:center;gap:4px}
+.btn:hover{box-shadow:0 0 15px rgba(240,104,120,0.2)}
+.btn.sec{background:var(--bg2);border:1px solid var(--border);color:var(--muted)}
+.btn.green{background:linear-gradient(135deg,#00C853,#009624)}
+.btn.blue{background:linear-gradient(135deg,#4488FF,#2255CC)}
+.btn.sm{padding:4px 8px;font-size:9px}
 
-/* FOOTER */
-.ftr{padding:4px 8px;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-shrink:0;font-size:8px;color:var(--lgray)}
-.ftr .brand{color:var(--red);font-weight:700;letter-spacing:1px}
+/* ═══ MODULE CARDS ═══ */
+.mod-card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:14px;margin-bottom:8px;display:flex;align-items:center;gap:12px}
+.mod-icon{width:44px;height:44px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0}
+.mod-info{flex:1}
+.mod-name{font-size:12px;font-weight:700;color:var(--text)}
+.mod-desc{font-size:9px;color:var(--muted);margin-top:1px}
+.mod-status{font-size:8px;padding:2px 6px;border-radius:4px;font-weight:700}
+.mod-status.live{background:rgba(0,230,118,0.1);color:var(--green)}
+.mod-status.dev{background:rgba(255,179,0,0.1);color:var(--amber)}
+.mod-status.plan{background:rgba(90,106,128,0.1);color:var(--muted)}
 
-/* ═══ LIGHT THEME ═══ */
-body.light{--bg:#F0F2F5;--bg2:#FFFFFF;--bg3:#E8ECF0;--white:#1A1A2E;--lgray:#556677;--gray:#BBCCDD;--border:#D0D8E0}
-body.light .hdr{background:linear-gradient(180deg,#FFF5F5,#F0F2F5)}
-body.light .hdr h1{color:#E8192C}
-body.light .hdr p{color:#AA1020}
-body.light .ctrl select,body.light .ctrl input{background:#fff;border-color:#D0D8E0;color:#1A1A2E}
-body.light .fbtn{background:#fff;border-color:#D0D8E0;color:#556677}
-body.light .pin-table th{background:#E8ECF0;color:#E8192C}
-body.light .pin-table td{color:#1A1A2E;border-bottom:1px solid #E8ECF0}
-body.light .pin-table tr:hover td{background:rgba(232,25,44,0.05)}
-body.light .ftr{background:#F0F2F5;border-color:#D0D8E0}
-body.light .ftr span{color:#556677}
-body.light .info{color:#556677}
-body.light .canvas-wrap{background:#FFFFFF}
-body.light .toast{background:#fff;color:#1A1A2E;border-color:#E8192C}
+/* ═══ LOG ═══ */
+.log{background:var(--bg);border:1px solid var(--border);border-radius:6px;padding:8px;font-family:'Share Tech Mono',monospace;font-size:9px;color:var(--muted);max-height:200px;overflow-y:auto;white-space:pre-wrap}
 
+/* ═══ FORM ═══ */
+.form-row{display:flex;gap:6px;margin-bottom:6px}
+.form-row>*{flex:1}
+label{font-size:9px;color:var(--muted);letter-spacing:1px;display:block;margin-bottom:2px}
 
+/* ═══ MODAL ═══ */
+.modal-bg{position:fixed;inset:0;background:rgba(0,0,0,0.7);display:none;z-index:200;align-items:center;justify-content:center;padding:16px}
+.modal-bg.show{display:flex}
+.modal{background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:20px;max-width:400px;width:100%;max-height:80vh;overflow-y:auto}
+.modal h3{font-family:'Orbitron',sans-serif;font-size:13px;color:var(--red);letter-spacing:2px;margin-bottom:12px}
 
-.fbtn[data-cat="fn_inyector"].active{color:#FF7043;background:rgba(255,112,67,0.1);border-color:#FF7043}
-.fbtn[data-cat="fn_bobina"].active{color:#FF5252;background:rgba(255,82,82,0.1);border-color:#FF5252}
-.fbtn[data-cat="fn_ckp"].active{color:#00BCD4;background:rgba(0,188,212,0.1);border-color:#00BCD4}
-.fbtn[data-cat="fn_tps"].active{color:#8BC34A;background:rgba(139,195,74,0.1);border-color:#8BC34A}
-.fbtn[data-cat="fn_o2"].active{color:#9C27B0;background:rgba(156,39,176,0.1);border-color:#9C27B0}
-.fbtn[data-cat="fn_tierra"].active{color:#795548;background:rgba(121,85,72,0.1);border-color:#795548}
-.fbtn[data-cat="fn_diesel"].active{color:#F5A623;background:rgba(245,166,35,0.1);border-color:#F5A623}
-
-/* ═══ SPLIT SCREEN MODE ═══ */
-.app.split .canvas-wrap{flex:1;max-height:55vh;overflow:auto;border-bottom:2px solid var(--red)}
-.app.split .pin-table-wrap{display:block!important;flex:1;max-height:none;overflow-y:auto}
-.app.split .pin-table-wrap{border-top:none}
-/* Resize handle */
-.split-handle{display:none;height:8px;background:var(--bg3);cursor:ns-resize;flex-shrink:0;
-  border-top:1px solid var(--border);border-bottom:1px solid var(--border);
-  position:relative}
-.split-handle::after{content:'';position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);
-  width:30px;height:3px;background:var(--red);border-radius:2px;opacity:0.5}
-.app.split .split-handle{display:block}
-
+/* ═══ TOAST ═══ */
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:var(--card);border:1px solid var(--red);border-radius:8px;padding:8px 16px;font-size:11px;color:var(--text);z-index:300;display:none;box-shadow:0 8px 30px rgba(0,0,0,0.5)}
 </style>
 </head>
 <body>
-<div class="app">
-  <div class="hdr">
-    <div class="hdr-eye">👁️</div>
-    <div>
-      <h1>PULSAR PREDICTIVO</h1>
-      <p>GENERADOR DE DIAGRAMAS · DATESEG MX</p>
-    </div>
-    <div class="hdr-badge">🔌 <span id="modelCount">0</span> MODELOS</div>
-  </div>
 
-  <div class="ctrl">
-    <div class="ctrl-row">
-      <select id="selMarca" onchange="onMarcaChange()" style="flex:1">
-        <option value="">— MARCA —</option>
-      </select>
-      <select id="selModelo" onchange="onModeloChange()" disabled style="flex:1.5">
-        <option value="">— MODELO —</option>
-      </select>
-      <button class="btn" onclick="exportPNG()" style="padding:6px 10px">📸</button>
-      <button class="btn sec" onclick="toggleSplit()" style="padding:6px 10px" id="splitBtn" title="Dividir pantalla">⬜</button>
-      <button class="btn sec" id="themeBtn" onclick="toggleTheme()" style="padding:6px 10px">☀️</button>
-    </div>
-    <div class="ctrl-row">
-      <input id="searchPin" placeholder="🔍 Buscar pin, función, cable..." oninput="filterSearch()" style="flex:2">
-      <label class="btn sec" style="padding:6px 10px;cursor:pointer;position:relative;overflow:hidden">
-        📄 SUBIR
-        <input type="file" id="fileInput" accept="image/*,.pdf" onchange="loadUploadedFile(event)" style="position:absolute;inset:0;opacity:0;cursor:pointer">
-      </label>
-    </div>
+<!-- HEADER -->
+<div class="header">
+  <div>
+    <div class="h-logo">DATESEG MX</div>
+    <div class="h-sub">CENTRO DE MANDO · v2.0</div>
   </div>
-
-  <div class="filters" id="filterBar" style="flex-wrap:wrap">
-    <div class="fbtn active" data-cat="all" onclick="setFilter('all')">🔌 TODOS</div>
-    <div class="fbtn" data-cat="sensor" onclick="setFilter('sensor')">📡 SENSORES</div>
-    <div class="fbtn" data-cat="actuator" onclick="setFilter('actuator')">⚡ ACTUADORES</div>
-    <div class="fbtn" data-cat="power" onclick="setFilter('power')">🔋 12V/GND</div>
-    <div class="fbtn" data-cat="can" onclick="setFilter('can')">🔗 CAN</div>
-    <div class="fbtn" data-cat="fn_inyector" onclick="setFilter('fn_inyector')">💉 INYECT</div>
-    <div class="fbtn" data-cat="fn_bobina" onclick="setFilter('fn_bobina')">🔥 BOBINA</div>
-    <div class="fbtn" data-cat="fn_ckp" onclick="setFilter('fn_ckp')">⚙️ CKP</div>
-    <div class="fbtn" data-cat="fn_tps" onclick="setFilter('fn_tps')">🦋 TPS</div>
-    <div class="fbtn" data-cat="fn_o2" onclick="setFilter('fn_o2')">💨 O2</div>
-    <div class="fbtn" data-cat="fn_tierra" onclick="setFilter('fn_tierra')">⏚ TIERRAS</div>
-    <div class="fbtn" data-cat="fn_diesel" onclick="setFilter('fn_diesel')">🛢️ DIESEL</div>
-  </div>
-
-  <div class="info" id="infoBar" style="display:none">
-    <span id="infoModel">—</span>
-    <span id="infoPins" class="tag">0 PINES</span>
-  </div>
-
-  <div class="canvas-wrap" id="canvasWrap">
-    <canvas id="diagramCanvas"></canvas>
-    <div style="display:flex;align-items:center;justify-content:center;height:100%;color:var(--lgray);font-size:13px;letter-spacing:2px;text-align:center;padding:40px" id="placeholder">
-      👆 SELECCIONA MARCA Y MODELO<br><span style="font-size:10px;color:var(--gray)">para generar el diagrama con colores OEM</span>
-    </div>
-  </div>
-
-  <div class="split-handle" id="splitHandle"></div>
-  <div class="pin-table-wrap" id="tableWrap" style="display:none">
-    <table class="pin-table">
-      <thead><tr><th>#PIN</th><th>FUNCIÓN</th><th>CAT</th><th>COLOR CABLE</th><th>VALOR</th><th>DTC</th></tr></thead>
-      <tbody id="tableBody"></tbody>
-    </table>
-  </div>
-
-  <div class="ftr">
-    <span class="brand">PULSAR PREDICTIVO · DATESEG MX</span>
-    <span>Diagramas originales de agencia — evolucionados con tecnología IA</span>
+  <div class="h-right">
+    <span class="h-badge on" id="fbBadge">🔥 FIREBASE</span>
+    <span class="h-badge on">👤 ADMIN</span>
   </div>
 </div>
 
+<!-- TABS -->
+<div class="tabs">
+  <button class="tab active" onclick="setTab('dashboard')">🏠 Panel</button>
+  <button class="tab" onclick="setTab('productos')">📦 Refaccionaria</button>
+  <button class="tab" onclick="setTab('pinouts')">🔌 Pinouts</button>
+  <button class="tab" onclick="setTab('apps')">📱 Apps</button>
+  <button class="tab" onclick="setTab('mercado')">🛒 Mercado Libre</button>
+  <button class="tab" onclick="setTab('firebase')">🔥 Firebase</button>
+  <button class="tab" onclick="setTab('config')">⚙️ Config</button>
+</div>
 
-  <!-- UPLOAD PREVIEW -->
-  <div id="uploadPanel" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.92);z-index:500;display:none;flex-direction:column;align-items:center;justify-content:center;padding:16px">
-    <div style="background:var(--bg2);border:2px solid var(--red);border-radius:16px;max-width:500px;width:100%;max-height:90vh;overflow-y:auto;padding:16px">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
-        <span style="font-family:Orbitron,sans-serif;font-size:12px;font-weight:700;color:var(--red);letter-spacing:2px">📄 ANALIZAR DIAGRAMA</span>
-        <button onclick="closeUpload()" style="background:none;border:none;color:var(--red);font-size:20px;cursor:pointer">✕</button>
-      </div>
-      <img id="uploadPreview" style="width:100%;max-height:200px;object-fit:contain;border-radius:8px;border:1px solid var(--border);margin-bottom:10px;background:#000">
-      <div id="uploadStatus" style="font-size:10px;color:var(--lgray);text-align:center;margin-bottom:10px"></div>
-      <button class="btn" onclick="analyzeWithIA()" id="btnAnalyze" style="width:100%;padding:12px;font-size:13px" disabled>🤖 ANALIZAR CON IA</button>
-      <div id="uploadProgress" style="display:none;margin-top:10px">
-        <div style="background:var(--bg3);border-radius:8px;height:6px;overflow:hidden">
-          <div id="progFill" style="background:var(--red);height:100%;width:0%;transition:width 0.5s;border-radius:8px"></div>
-        </div>
-        <div id="progText" style="font-size:9px;color:var(--lgray);text-align:center;margin-top:4px"></div>
-      </div>
-      <div id="iaResult" style="display:none;margin-top:12px;background:var(--bg3);border-radius:10px;padding:12px;font-size:10px">
-        <div style="font-weight:700;color:var(--red);margin-bottom:6px;font-size:11px;letter-spacing:1px">🔍 RESULTADO DEL ANÁLISIS</div>
-        <div id="iaResultContent"></div>
-        <button class="btn" onclick="loadIAResult()" style="width:100%;margin-top:10px;padding:8px" id="btnLoadResult" disabled>✅ CARGAR EN DIAGRAMA</button>
-      </div>
+<!-- ═══ 1. DASHBOARD ═══ -->
+<div class="panel active" id="panel-dashboard">
+  <div class="dash-grid">
+    <div class="dash-item" onclick="setTab('pinouts')">
+      <div class="dash-icon">🔌</div>
+      <div class="dash-label">MODELOS</div>
+      <div class="dash-value" id="dModels">199</div>
+      <div class="dash-sub">Pinouts en base de datos</div>
+    </div>
+    <div class="dash-item" onclick="setTab('productos')">
+      <div class="dash-icon">📦</div>
+      <div class="dash-label">PRODUCTOS</div>
+      <div class="dash-value" id="dProducts">80+</div>
+      <div class="dash-sub">Refaccionaria Millán</div>
+    </div>
+    <div class="dash-item" onclick="setTab('apps')">
+      <div class="dash-icon">📱</div>
+      <div class="dash-label">APPS</div>
+      <div class="dash-value">5</div>
+      <div class="dash-sub">Ecosistema DATESEG</div>
+    </div>
+    <div class="dash-item" onclick="setTab('mercado')">
+      <div class="dash-icon">🛒</div>
+      <div class="dash-label">ANUNCIOS</div>
+      <div class="dash-value">3</div>
+      <div class="dash-sub">Mercado Libre</div>
     </div>
   </div>
 
-<div class="toast" id="toast"></div>
+  <!-- Ecosystem overview -->
+  <div class="card">
+    <div class="card-title">🌐 ECOSISTEMA DATESEG MX</div>
+
+    <div class="mod-card">
+      <div class="mod-icon" style="background:rgba(240,104,120,0.1)">👁️</div>
+      <div class="mod-info">
+        <div class="mod-name">Pulsar Predictivo Móvil</div>
+        <div class="mod-desc">Scanner OBD2 + Diagramas + VIN + IA Predictiva + Refaccionaria</div>
+      </div>
+      <span class="mod-status dev">EN DESARROLLO</span>
+    </div>
+
+    <div class="mod-card">
+      <div class="mod-icon" style="background:rgba(255,179,0,0.1)">🛡️</div>
+      <div class="mod-info">
+        <div class="mod-name">OilMaster V2</div>
+        <div class="mod-desc">Seguridad vial · SOS · "Tu Familia Te Espera"</div>
+      </div>
+      <span class="mod-status live">LISTO</span>
+    </div>
+
+    <div class="mod-card">
+      <div class="mod-icon" style="background:rgba(68,136,255,0.1)">📐</div>
+      <div class="mod-info">
+        <div class="mod-name">Pulsar Diagramas</div>
+        <div class="mod-desc">Generador de diagramas · 199 modelos · Colores OEM</div>
+      </div>
+      <span class="mod-status live">LISTO</span>
+    </div>
+
+    <div class="mod-card">
+      <div class="mod-icon" style="background:rgba(0,230,118,0.1)">🎓</div>
+      <div class="mod-info">
+        <div class="mod-name">DATESEG Academy</div>
+        <div class="mod-desc">Flash ECU · Reparación ECU · Bidireccional J2534</div>
+      </div>
+      <span class="mod-status plan">PLANEADO</span>
+    </div>
+
+    <div class="mod-card">
+      <div class="mod-icon" style="background:rgba(167,139,250,0.1)">⚡</div>
+      <div class="mod-info">
+        <div class="mod-name">AprendeCode V3</div>
+        <div class="mod-desc">Voz a código · Plantillas · Generador de proyectos</div>
+      </div>
+      <span class="mod-status live">LISTO</span>
+    </div>
+  </div>
+
+  <!-- Quick actions -->
+  <div class="card">
+    <div class="card-title">⚡ ACCIONES RÁPIDAS</div>
+    <div style="display:flex;flex-wrap:wrap;gap:6px">
+      <button class="btn sm" onclick="setTab('productos')">➕ Agregar Producto</button>
+      <button class="btn sm blue" onclick="setTab('pinouts')">➕ Agregar Pinout</button>
+      <button class="btn sm green" onclick="setTab('firebase')">🔄 Sincronizar Firebase</button>
+      <button class="btn sm sec" onclick="setTab('mercado')">📋 Ver Anuncios ML</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ 2. REFACCIONARIA ═══ -->
+<div class="panel" id="panel-productos">
+  <div class="card">
+    <div class="card-title">📦 REFACCIONARIA DE PARTES ELÉCTRICAS MILLÁN</div>
+    <div style="display:flex;gap:6px;margin-bottom:8px">
+      <input type="text" id="prodSearch" placeholder="🔍 Buscar producto..." oninput="filterProducts()">
+      <button class="btn" onclick="showAddProduct()">➕</button>
+    </div>
+    <div class="stats-row">
+      <div class="stat"><b id="prodTotal">0</b>Productos</div>
+      <div class="stat"><b id="prodCats">0</b>Categorías</div>
+      <div class="stat"><b id="prodValue">$0</b>Valor total</div>
+    </div>
+    <div style="overflow-x:auto">
+      <table class="prod-table">
+        <thead><tr><th>CÓDIGO</th><th>DESCRIPCIÓN</th><th>PRECIO</th><th>STOCK</th><th>ACCIÓN</th></tr></thead>
+        <tbody id="prodBody"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ 3. PINOUTS ═══ -->
+<div class="panel" id="panel-pinouts">
+  <div class="card">
+    <div class="card-title">🔌 BASE DE DATOS DE PINOUTS</div>
+    <div style="display:flex;gap:6px;margin-bottom:8px">
+      <input type="text" id="pinSearch" placeholder="🔍 Buscar modelo..." oninput="filterPinouts()">
+      <button class="btn blue" onclick="showAddPinout()">➕</button>
+    </div>
+    <div class="stats-row">
+      <div class="stat"><b id="pinModels">199</b>Modelos</div>
+      <div class="stat"><b id="pinPins">0</b>Pines total</div>
+      <div class="stat"><b id="pinMarcas">0</b>Marcas</div>
+    </div>
+    <div id="pinoutList"></div>
+  </div>
+</div>
+
+<!-- ═══ 4. APPS ═══ -->
+<div class="panel" id="panel-apps">
+  <div class="card">
+    <div class="card-title">📱 APPS DEL ECOSISTEMA</div>
+
+    <div class="mod-card">
+      <div class="mod-icon" style="background:rgba(240,104,120,0.1)">👁️</div>
+      <div class="mod-info">
+        <div class="mod-name">Pulsar Predictivo Móvil</div>
+        <div class="mod-desc">com.dateseg.pulsar · Play Store</div>
+      </div>
+      <div style="display:flex;gap:4px;flex-direction:column">
+        <span class="mod-status dev">Android Studio</span>
+        <button class="btn sm sec" onclick="toast('Abrir Android Studio para compilar')">🔨 Compilar</button>
+      </div>
+    </div>
+
+    <div class="mod-card">
+      <div class="mod-icon" style="background:rgba(255,179,0,0.1)">🛡️</div>
+      <div class="mod-info">
+        <div class="mod-name">OilMaster V2</div>
+        <div class="mod-desc">com.dateseg.oilmaster · Portrait</div>
+      </div>
+      <div style="display:flex;gap:4px;flex-direction:column">
+        <span class="mod-status live">✅ LISTO</span>
+        <button class="btn sm green" onclick="toast('OilMaster listo para Play Store')">📤 Publicar</button>
+      </div>
+    </div>
+
+    <div class="mod-card">
+      <div class="mod-icon" style="background:rgba(68,136,255,0.1)">📐</div>
+      <div class="mod-info">
+        <div class="mod-name">Pulsar Diagramas</div>
+        <div class="mod-desc">com.dateseg.pulsar.diagramas · Landscape</div>
+      </div>
+      <div style="display:flex;gap:4px;flex-direction:column">
+        <span class="mod-status live">✅ LISTO</span>
+        <button class="btn sm green" onclick="toast('Diagramas listo para Play Store')">📤 Publicar</button>
+      </div>
+    </div>
+
+    <div class="mod-card">
+      <div class="mod-icon" style="background:rgba(0,230,118,0.1)">🎓</div>
+      <div class="mod-info">
+        <div class="mod-name">DATESEG Academy</div>
+        <div class="mod-desc">Módulo PRO · J2534 requerido</div>
+      </div>
+      <span class="mod-status plan">PLANEADO</span>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">🔧 ANDROID STUDIO — ARCHIVOS</div>
+    <div style="font-family:'Share Tech Mono',monospace;font-size:9px;color:var(--muted);background:var(--bg);padding:8px;border-radius:6px;white-space:pre">ProPartV7/
+├── settings.gradle
+├── build.gradle          ← buildscript + allprojects
+├── gradle/wrapper/gradle-wrapper.properties
+└── app/
+    ├── build.gradle      ← plugins + android + dependencies
+    ├── proguard-rules.pro
+    └── src/main/
+        ├── AndroidManifest.xml
+        ├── assets/
+        │   └── ProPart_V7.html
+        ├── java/com/propart/v7/
+        │   ├── MainActivity.java
+        │   └── ConnectionManager.java
+        └── res/values/
+            └── themes.xml</div>
+  </div>
+</div>
+
+<!-- ═══ 5. MERCADO LIBRE ═══ -->
+<div class="panel" id="panel-mercado">
+  <div class="card">
+    <div class="card-title">🛒 ANUNCIOS MERCADO LIBRE</div>
+
+    <div class="mod-card">
+      <div class="mod-icon" style="background:rgba(255,179,0,0.1)">📋</div>
+      <div class="mod-info">
+        <div class="mod-name">Diagrama Eléctrico Automotriz — PDF Digital</div>
+        <div class="mod-desc">Producto digital · $199 MXN · Sin envío físico</div>
+      </div>
+      <button class="btn sm" onclick="copyAnuncio(1)">📋 Copiar</button>
+    </div>
+
+    <div class="mod-card">
+      <div class="mod-icon" style="background:rgba(68,136,255,0.1)">🔍</div>
+      <div class="mod-info">
+        <div class="mod-name">Diagnóstico Automotriz Remoto OBD2</div>
+        <div class="mod-desc">Servicio digital · $299 MXN · Interpretación DTCs</div>
+      </div>
+      <button class="btn sm" onclick="copyAnuncio(2)">📋 Copiar</button>
+    </div>
+
+    <div class="mod-card">
+      <div class="mod-icon" style="background:rgba(0,230,118,0.1)">🏠</div>
+      <div class="mod-info">
+        <div class="mod-name">Diagnóstico a Domicilio — Morelos</div>
+        <div class="mod-desc">Servicio presencial · $499 MXN · Zona: Alpuyeca-Cuernavaca</div>
+      </div>
+      <button class="btn sm" onclick="copyAnuncio(3)">📋 Copiar</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">⚠️ REGLAS MERCADO LIBRE</div>
+    <div style="font-size:10px;color:var(--muted);line-height:1.6">
+      ❌ NO poner teléfono ni WhatsApp en el anuncio<br>
+      ❌ NO poner correo directo<br>
+      ✅ El cliente contacta por PREGUNTAS de ML<br>
+      ✅ Ya que COMPRE, ahí sí mandas WhatsApp por chat privado<br>
+      ✅ En el paquete físico (si es kit) puedes meter tarjeta con datos<br>
+      💰 Comisión ML: ~16-26% por venta<br>
+      ⏱️ Te pagan: 2-3 días después de entrega confirmada
+    </div>
+  </div>
+</div>
+
+<!-- ═══ 6. FIREBASE ═══ -->
+<div class="panel" id="panel-firebase">
+  <div class="card">
+    <div class="card-title">🔥 FIREBASE — ESTADO</div>
+    <div class="stats-row">
+      <div class="stat"><b>✅</b>Conectado</div>
+      <div class="stat"><b id="fbDocs">0</b>Documentos</div>
+      <div class="stat"><b>Firestore</b>Base de datos</div>
+    </div>
+    <div style="font-family:'Share Tech Mono',monospace;font-size:9px;color:var(--muted);margin-top:6px">
+      Project ID: studio-415982426-96c9a<br>
+      App ID: 1:35185317930:web:42480af0be407646df0b53
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">📤 ACCIONES</div>
+    <div style="display:flex;flex-direction:column;gap:6px">
+      <button class="btn green" onclick="syncToFirebase()">🔄 Sincronizar Pinouts a Firebase</button>
+      <button class="btn blue" onclick="checkFirebase()">🔍 Verificar datos en Firestore</button>
+      <button class="btn sec" onclick="downloadBackup()">💾 Descargar backup JSON</button>
+    </div>
+    <div class="log" id="fbLog" style="margin-top:8px">Firebase listo. Usa el Uploader para subir datos.</div>
+  </div>
+</div>
+
+<!-- ═══ 7. CONFIG ═══ -->
+<div class="panel" id="panel-config">
+  <div class="card">
+    <div class="card-title">⚙️ CONFIGURACIÓN GENERAL</div>
+    <div class="form-row"><div><label>NOMBRE EMPRESA</label><input value="DATESEG MX — Sistema de Tecnologías Automotrices"></div></div>
+    <div class="form-row"><div><label>PROPIETARIO</label><input value="Fernando Millán Melchor"></div></div>
+    <div class="form-row">
+      <div><label>TELÉFONO</label><input value="777-683-8196"></div>
+      <div><label>EMAIL</label><input value="pulsar.predictivo@gmail.com"></div>
+    </div>
+    <div class="form-row"><div><label>DIRECCIÓN</label><input value="Alpuyeca, Xochitepec, Morelos, México"></div></div>
+    <div class="form-row">
+      <div><label>PIN ADMIN</label><input type="password" value="2025" id="adminPin"></div>
+      <div><label>DOMINIO</label><input value="dateseg.mx" placeholder="dateseg.mx"></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">🔥 FIREBASE CONFIG</div>
+    <div style="font-family:'Share Tech Mono',monospace;font-size:9px;color:var(--muted);background:var(--bg);padding:8px;border-radius:6px;white-space:pre-wrap">apiKey: AIzaSyAL5a-RWJGc7lnHvFy5SvyKVVA_3FBYMOg
+authDomain: studio-415982426-96c9a.firebaseapp.com
+projectId: studio-415982426-96c9a
+storageBucket: studio-415982426-96c9a.firebasestorage.app
+messagingSenderId: 35185317930
+appId: 1:35185317930:web:42480af0be407646df0b53</div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">📊 PRECIOS KITS</div>
+    <div class="form-row">
+      <div><label>SOLO SOFTWARE</label><input type="number" value="1499"></div>
+      <div><label>KIT ESTÁNDAR</label><input type="number" value="4999"></div>
+    </div>
+    <div class="form-row">
+      <div><label>KIT PROFESIONAL</label><input type="number" value="6999"></div>
+      <div><label>KIT PREMIUM</label><input type="number" value="11999"></div>
+    </div>
+    <button class="btn" style="margin-top:8px" onclick="toast('✅ Configuración guardada')">💾 GUARDAR</button>
+  </div>
+</div>
+
+<!-- ═══ MODALS ═══ -->
+<div class="modal-bg" id="modalBg" onclick="if(event.target===this)closeModal()">
+  <div class="modal" id="modalContent"></div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toastEl"></div>
 
 <script>
-// PULSAR PREDICTIVO — Pinout Database
-// Extracted from ProPart V7 PROPART_DB
-// 101 models, generated 2026-03-28 04:00:44.761212
+// ═══ TAB NAVIGATION ═══
+function setTab(name) {
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('panel-' + name).classList.add('active');
+  document.querySelectorAll('.tab').forEach(t => {
+    if (t.textContent.toLowerCase().includes(name.substring(0, 4)) || 
+        (name === 'dashboard' && t.textContent.includes('Panel'))) {
+      t.classList.add('active');
+    }
+  });
+}
 
-const PINOUT_DB = {
-  'nissan_ga16de': {
-    nombre: 'Nissan Tsuru / Sentra B13 — ECM GA16DE',
-    vehiculo: '',
-    ecu: '',
-    total: 0,
-    pines: [
-      {n:'1',fn:'Inyector #1 — Señal Low Side',cat:'actuator',col:'#2244AA',colName:'Azul/Negro (N/Bl)',spec:'12V reposo → 0V en pulso (3-5ms)',dtc:'P0201'},
-      {n:'2',fn:'Inyector #2 — Señal Low Side',cat:'actuator',col:'#2244AA',colName:'Azul/Rojo (N/R)',spec:'12V reposo → 0V en pulso',dtc:'P0202'},
-      {n:'3',fn:'Inyector #3 — Señal Low Side',cat:'actuator',col:'#2266CC',colName:'Azul/Verde (N/V)',spec:'12V reposo → 0V en pulso',dtc:'P0203'},
-      {n:'4',fn:'Inyector #4 — Señal Low Side',cat:'actuator',col:'#1155BB',colName:'Azul/Amarillo (N/Am)',spec:'12V reposo → 0V en pulso',dtc:'P0204'},
-      {n:'11',fn:'Sensor Detonación (KNK) Señal',cat:'sensor',col:'#AAAAAA',colName:'Gris',spec:'AC 0.1-1.5V en golpeteo',dtc:'P0325'},
-      {n:'18',fn:'Voltaje de Referencia (Vref 5V)',cat:'power',col:'#888888',colName:'Gris/Rojo (Gr/R)',spec:'5.00V ±0.05V constante',dtc:'—'},
-      {n:'22',fn:'Tierra Señal Sensor (SGND/E2)',cat:'power',col:'#222222',colName:'Negro/Blanco',spec:'0V — máx 0.1V drop',dtc:'—'},
-      {n:'24',fn:'CKP — Señal (NE)',cat:'sensor',col:'#FFAA00',colName:'Amarillo/Verde',spec:'AC sinusoidal 1-40Vpp',dtc:'P0335'},
-      {n:'31',fn:'Alimentación +12V Batería (KL30)',cat:'power',col:'#DD0000',colName:'Rojo (R)',spec:'12-14.5V constante',dtc:'—'},
-      {n:'33',fn:'Ignición +12V bajo llave (KL15)',cat:'power',col:'#DD0000',colName:'Rojo/Negro (R/N)',spec:'12V solo con IGN ON',dtc:'—'},
-      {n:'37',fn:'CMP — Señal (G) árbol de levas',cat:'sensor',col:'#004488',colName:'Verde (V)',spec:'5V/0V onda cuadrada Hall',dtc:'P0340'},
-      {n:'40',fn:'MAF — Señal (VG)',cat:'sensor',col:'#118833',colName:'Verde/Azul (V/Bl)',spec:'0.8-1.2V ralentí / >4V WOT',dtc:'P0101'},
-      {n:'41',fn:'MAF — Tierra Lógica (E2G)',cat:'power',col:'#333333',colName:'Negro (N)',spec:'0V — verificar Ground Offset',dtc:'—'},
-      {n:'42',fn:'MAF — Alimentación (+B 12V)',cat:'power',col:'#DD0000',colName:'Rojo/Negro (R/N)',spec:'12V con IGN ON',dtc:'—'},
-      {n:'43',fn:'TPS — Señal',cat:'sensor',col:'#AAAA00',colName:'Azul/Rojo (Bl/R)',spec:'0.5V cerrado → 4.5V WOT',dtc:'P0120'},
-      {n:'44',fn:'TPS — Vref 5V',cat:'power',col:'#888888',colName:'Azul/Rojo (Bl/R)',spec:'5.00V ±0.05V',dtc:'—'},
-      {n:'51',fn:'ECT — Señal (Water Temp)',cat:'sensor',col:'#228899',colName:'Azul/Blanco (Bl/Az)',spec:'0.6V caliente / 4.5V frío',dtc:'P0116'},
-      {n:'52',fn:'IAT — Señal (Air Temp)',cat:'sensor',col:'#22AAAA',colName:'Azul/Gris (Bl/Gr)',spec:'0.6V caliente / 4.5V frío',dtc:'P0112'},
-      {n:'55',fn:'O2 Sensor Señal (Aguas Arriba)',cat:'sensor',col:'#EE8800',colName:'Negro/Amarillo (N/Am)',spec:'0.1-0.9V AC cíclico',dtc:'P0131'},
-      {n:'58',fn:'Bobina de Encendido — Señal IGT',cat:'actuator',col:'#9922CC',colName:'Negro/Rojo (N/R)',spec:'5V reposo → pulso 0V',dtc:'P0351'},
-      {n:'62',fn:'Tierra Potencia ECU (GND)',cat:'power',col:'#111111',colName:'Negro/Marrón',spec:'0V — caída máx 100mV',dtc:'—'},
-    ]
-  },
-  'vw_golf_a4': {
-    nombre: 'VW Golf A4 / Jetta A4 — ECU Bosch ME7.5.10',
-    vehiculo: '',
-    ecu: '',
-    total: 0,
-    pines: [
-      {n:'1-2',fn:'Potencia Principal +12V',cat:'power',col:'#DD0000',colName:'Rojo/Negro',spec:'12V KL30 — relevador principal 30A',dtc:'—'},
-      {n:'4-5',fn:'Tierra de Potencia GND',cat:'power',col:'#663300',colName:'Marrón (BR)',spec:'0V — tierra chasis sin pintura',dtc:'—'},
-      {n:'16',fn:'Línea K de Diagnóstico',cat:'diag',col:'#888888',colName:'Gris/Blanco',spec:'OBD2 Pin 7 — K-Line ISO 9141-2',dtc:'—'},
-      {n:'18',fn:'Tierra Activación Relevador',cat:'power',col:'#001188',colName:'Azul/Amarillo (BL/GE)',spec:'Activa relevador principal EFI',dtc:'—'},
-      {n:'49',fn:'Señal CKP — Cigüeñal',cat:'sensor',col:'#FFAA00',colName:'Amarillo/Rojo',spec:'AC sinusoidal 1-25Vpp',dtc:'P0335'},
-      {n:'60',fn:'CAN-H Bus',cat:'can',col:'#EE8800',colName:'Naranja (OG)',spec:'2.5V reposo → 3.5V dominante',dtc:'U0100'},
-      {n:'61',fn:'CAN-L Bus',cat:'can',col:'#006600',colName:'Verde (GN)',spec:'2.5V reposo → 1.5V dominante',dtc:'U0100'},
-      {n:'85-88',fn:'Inyectores #1-4 — Low Side',cat:'actuator',col:'#2244AA',colName:'Azul con trazas',spec:'12V reposo → 0V pulso',dtc:'P0201-P0204'},
-    ]
-  },
-  'toyota_2jz': {
-    nombre: 'Toyota 2JZ-GTE VVTi — ECU Aristo JZS161 / Supra JZA80',
-    vehiculo: '',
-    ecu: '',
-    total: 0,
-    pines: [
-      {n:'1 (B1)',fn:'Inyector #3 — Control (#30)',cat:'actuator',col:'#2244AA',colName:'Azul',spec:'GND conmutado low side',dtc:'P0203'},
-      {n:'7 (B1)',fn:'Motor ETCS-i — M- (negativo)',cat:'actuator',col:'#663300',colName:'Marrón',spec:'PWM H-Bridge negativo',dtc:'P2102'},
-      {n:'8 (B1)',fn:'Motor ETCS-i — M+ (positivo)',cat:'actuator',col:'#DD0000',colName:'Rojo',spec:'PWM H-Bridge positivo',dtc:'P2102'},
-      {n:'10 (B1)',fn:'CMP — Árbol de Levas Intake (G2)',cat:'sensor',col:'#FFAA00',colName:'Amarillo/Verde',spec:'Reluctor inductivo AC',dtc:'P0340'},
-      {n:'11 (B1)',fn:'Señal Ignición IGT — Cil 1 y 6',cat:'actuator',col:'#9922CC',colName:'Violeta',spec:'Digital 5V gatillo',dtc:'P0351'},
-      {n:'17 (B1)',fn:'Solenoide VVTi (OCV) — Control',cat:'actuator',col:'#118833',colName:'Verde',spec:'PWM 0-100%',dtc:'P1349'},
-      {n:'+B',fn:'Alimentación Constante (Relevador EFI)',cat:'power',col:'#DD0000',colName:'Rojo',spec:'12V — via relevador EFI',dtc:'—'},
-      {n:'E1',fn:'Tierra Principal ECU',cat:'power',col:'#222222',colName:'Negro',spec:'0V — referencia principal',dtc:'—'},
-    ]
-  },
-  'unknown_336055': {
-    nombre: 'Nissan Versa / Tiida — ECM HR16DE',
-    vehiculo: '',
-    ecu: '',
-    total: 0,
-    pines: [
-    {n:'A1',fn:'Tierra ECM GND Potencia',cat:'power',col:'#111111',colName:'Negro/Azul',spec:'0V — caída máx 100mV',dtc:'—'},
-    {n:'A3',fn:'Alimentación IGN KL15',cat:'power',col:'#DD0000',colName:'Rojo/Blanco',spec:'12V con IGN ON',dtc:'—'},
-    {n:'A4',fn:'Alimentación +12V Constante KL30',cat:'power',col:'#DD0000',colName:'Rojo',spec:'12-14.5V constante',dtc:'—'},
-    {n:'A8',fn:'CKP — Señal cigüeñal',cat:'sensor',col:'#FFAA00',colName:'Amarillo/Verde',spec:'AC 1-25Vpp o Hall 5V',dtc:'P0335'},
-    {n:'A10',fn:'CMP — Árbol de levas',cat:'sensor',col:'#0
+// ═══ TOAST ═══
+function toast(msg) {
+  const el = document.getElementById('toastEl');
+  el.textContent = msg;
+  el.style.display = 'block';
+  setTimeout(() => el.style.display = 'none', 3000);
+}
+
+// ═══ MODAL ═══
+function showModal(html) {
+  document.getElementById('modalContent').innerHTML = html;
+  document.getElementById('modalBg').classList.add('show');
+}
+function closeModal() {
+  document.getElementById('modalBg').classList.remove('show');
+}
+
+// ═══ PRODUCTS (REFACCIONARIA) ═══
+let productos = JSON.parse(localStorage.getItem('dateseg_productos') || '[]');
+
+if (productos.length === 0) {
+  // Default products from Refaccionaria Millán
+  productos = [
+    {id:1,codigo:'BOB-001',desc:'Bobina Encendido VW Jetta A4',precio:450,stock:8,cat:'Bobinas'},
+    {id:2,codigo:'BOB-002',desc:'Bobina Nissan Tsuru / Sentra B15',precio:380,stock:5,cat:'Bobinas'},
+    {id:3,codigo:'REG-001',desc:'Regulador Voltaje Chevy/Aveo',precio:195,stock:12,cat:'Reguladores'},
+    {id:4,codigo:'FOC-H4',desc:'Foco Halógeno H4 12V 60/55W',precio:45,stock:30,cat:'Focos'},
+    {id:5,codigo:'FOC-H7',desc:'Foco Halógeno H7 12V 55W',precio:55,stock:25,cat:'Focos'},
+    {id:6,codigo:'SWT-001',desc:'Switch Luces Universal',precio:120,stock:10,cat:'Switches'},
+    {id:7,codigo:'REL-001',desc:'Relay 5 Pines 40A Universal',precio:65,stock:20,cat:'Relays'},
+    {id:8,codigo:'FUS-SET',desc:'Kit Fusibles Surtidos (100 pz)',precio:85,stock:15,cat:'Fusibles'},
+    {id:9,codigo:'BOM-001',desc:'Bomba Gasolina Universal',precio:550,stock:4,cat:'Bombas'},
+    {id:10,codigo:'SOL-001',desc:'Solenoide Marcha Nissan',precio:280,stock:6,cat:'Solenoides'},
+    {id:11,codigo:'ARM-001',desc:'Armadura Alternador Chevy',precio:320,stock:3,cat:'Alternadores'},
+    {id:12,codigo:'CAR-001',desc:'Porta Carbón Alternador',precio:75,stock:18,cat:'Carbones'},
+    {id:13,codigo:'MOD-001',desc:'Módulo Encendido GM 4 Pin',precio:195,stock:7,cat:'Módulos'},
+    {id:14,codigo:'TER-001',desc:'Terminal Batería Universal Par',precio:35,stock:40,cat:'Terminales'},
+    {id:15,codigo:'FLA-001',desc:'Flasher 2 Pin 12V Universal',precio:45,stock:22,cat:'Flashers'}
+  ];
+  saveProducts();
+}
+
+function saveProducts() {
+  localStorage.setItem('dateseg_productos', JSON.stringify(productos));
+}
+
+function renderProducts() {
+  const search = (document.getElementById('prodSearch').value || '').toLowerCase();
+  const filtered = productos.filter(p => 
+    p.desc.toLowerCase().includes(search) || 
+    p.codigo.toLowerCase().includes(search) ||
+    p.cat.toLowerCase().includes(search)
+  );
+  
+  const body = document.getElementById('prodBody');
+  body.innerHTML = filtered.map(p => `
+    <tr>
+      <td style="font-family:'Share Tech Mono',monospace;color:var(--blue)">${p.codigo}</td>
+      <td>${p.desc}</td>
+      <td style="color:var(--green)">$${p.precio}</td>
+      <td>${p.stock}</td>
+      <td>
+        <button class="btn sm sec" onclick="editProduct(${p.id})">✏️</button>
+        <button class="btn sm sec" style="color:var(--red)" onclick="deleteProduct(${p.id})">🗑️</button>
+      </td>
+    </tr>
+  `).join('');
+  
+  // Stats
+  const cats = [...new Set(productos.map(p => p.cat))];
+  const total = productos.reduce((s, p) => s + p.precio * p.stock, 0);
+  document.getElementById('prodTotal').textContent = productos.length;
+  document.getElementById('prodCats').textContent = cats.length;
+  document.getElementById('prodValue').textContent = '$' + total.toLocaleString();
+  document.getElementById('dProducts').textContent = productos.length;
+}
+
+function filterProducts() { renderProducts(); }
+
+function showAddProduct() {
+  showModal(`
+    <h3>➕ AGREGAR PRODUCTO</h3>
+    <div class="form-row"><div><label>CÓDIGO</label><input id="npCodigo" placeholder="BOB-003"></div></div>
+    <div class="form-row"><div><label>DESCRIPCIÓN</label><input id="npDesc" placeholder="Bobina Honda Civic"></div></div>
+    <div class="form-row">
+      <div><label>PRECIO</label><input type="number" id="npPrecio" placeholder="450"></div>
+      <div><label>STOCK</label><input type="number" id="npStock" placeholder="5"></div>
+    </div>
+    <div class="form-row"><div><label>CATEGORÍA</label><input id="npCat" placeholder="Bobinas"></div></div>
+    <button class="btn" style="width:100%;margin-top:8px" onclick="addProduct()">✅ AGREGAR</button>
+  `);
+}
+
+function addProduct() {
+  const p = {
+    id: Date.now(),
+    codigo: document.getElementById('npCodigo').value,
+    desc: document.getElementById('npDesc').value,
+    precio: parseInt(document.getElementById('npPrecio').value) || 0,
+    stock: parseInt(document.getElementById('npStock').value) || 0,
+    cat: document.getElementById('npCat').value || 'General'
+  };
+  if (!p.desc) { toast('❌ Agrega descripción'); return; }
+  productos.push(p);
+  saveProducts();
+  renderProducts();
+  closeModal();
+  toast('✅ Producto agregado: ' + p.desc);
+}
+
+function editProduct(id) {
+  const p = productos.find(x => x.id === id);
+  if (!p) return;
+  showModal(`
+    <h3>✏️ EDITAR PRODUCTO</h3>
+    <div class="form-row"><div><label>CÓDIGO</label><input id="epCodigo" value="${p.codigo}"></div></div>
+    <div class="form-row"><div><label>DESCRIPCIÓN</label><input id="epDesc" value="${p.desc}"></div></div>
+    <div class="form-row">
+      <div><label>PRECIO</label><input type="number" id="epPrecio" value="${p.precio}"></div>
+      <div><label>STOCK</label><input type="number" id="epStock" value="${p.stock}"></div>
+    </div>
+    <div class="form-row"><div><label>CATEGORÍA</label><input id="epCat" value="${p.cat}"></div></div>
+    <button class="btn" style="width:100%;margin-top:8px" onclick="saveEdit(${id})">💾 GUARDAR</button>
+  `);
+}
+
+function saveEdit(id) {
+  const p = productos.find(x => x.id === id);
+  if (!p) return;
+  p.codigo = document.getElementById('epCodigo').value;
+  p.desc = document.getElementById('epDesc').value;
+  p.precio = parseInt(document.getElementById('epPrecio').value) || 0;
+  p.stock = parseInt(document.getElementById('epStock').value) || 0;
+  p.cat = document.getElementById('epCat').value;
+  saveProducts();
+  renderProducts();
+  closeModal();
+  toast('✅ Producto actualizado');
+}
+
+function deleteProduct(id) {
+  if (!confirm('¿Eliminar este producto?')) return;
+  productos = productos.filter(x => x.id !== id);
+  saveProducts();
+  renderProducts();
+  toast('🗑️ Producto eliminado');
+}
+
+// ═══ PINOUTS ═══
+function renderPinouts() {
+  // This reads from localStorage if synced from Firebase
+  const stored = JSON.parse(localStorage.getItem('dateseg_pinouts_summary') || '[]');
+  const search = (document.getElementById('pinSearch')?.value || '').toLowerCase();
+  
+  let html = '';
+  const filtered = stored.filter(m => m.nombre.toLowerCase().includes(search));
+  
+  if (filtered.length === 0) {
+    html = '<div style="text-align:center;color:var(--muted);padding:20px;font-size:11px">Usa el Firebase Uploader para subir los 199 modelos, o abre el generador de diagramas directamente.</div>';
+  } else {
+    filtered.forEach(m => {
+      html += `<div class="mod-card">
+        <div class="mod-icon" style="background:rgba(68,136,255,0.1);font-size:14px">🔌</div>
+        <div class="mod-info">
+          <div class="mod-name">${m.nombre}</div>
+          <div class="mod-desc">${m.ecu || ''} · ${m.pines || 0} pines</div>
+        </div>
+        <span class="mod-status live">${m.pines || 0}p</span>
+      </div>`;
+    });
+  }
+  
+  document.getElementById('pinoutList').innerHTML = html;
+  document.getElementById('pinModels').textContent = stored.length || '199';
+}
+
+function filterPinouts() { renderPinouts(); }
+
+function showAddPinout() {
+  toast('Usa el Firebase Uploader para agregar modelos nuevos');
+}
+
+// ═══ MERCADO LIBRE ═══
+const anuncios = {
+  1: `Diagrama Eléctrico Automotriz ECU Pinout Profesional Español — PDF Digital\n\n¿Cansado de diagramas en inglés? Te entregamos el diagrama eléctrico de tu vehículo con colores reales de cables OEM, en español de taller.\n\nMarcas: Nissan, VW, Chevrolet, Ford, Honda, Toyota, SEAT, Mazda, Hyundai/KIA, Renault, Cummins y más.\n\n1. Compras aquí\n2. Nos envías marca, modelo, año y motor\n3. Te enviamos por mensaje de ML\n4. Entrega en menos de 24 horas\n\nPulsar Predictivo — DATESEG MX\nHecho en México`,
+  2: `Diagnóstico Automotriz Remoto OBD2 — Interpretación de Códigos\n\n¿Tu carro prende el check engine? Te ayudamos a interpretar tus códigos DTC y te guiamos paso a paso.\n\nIncluye: Interpretación DTC, diagnóstico de causa raíz, procedimiento de reparación, valores de referencia.\n\nPulsar Predictivo — DATESEG MX`,
+  3: `Diagnóstico Automotriz a Domicilio — Escáner Profesional OBD2 — Morelos\n\nZona: Alpuyeca, Xochitepec, Cuernavaca y alrededores.\n\nLectura/borrado DTCs, diagnóstico eléctrico, datos en vivo, reparación eléctrica general, gasolina y diesel.\n\nGarantía: Si no encontramos la falla, te devolvemos tu dinero.\n\nPulsar Predictivo — DATESEG MX`
+};
+
+function copyAnuncio(n) {
+  navigator.clipboard.writeText(anuncios[n]).then(() => {
+    toast('📋 Anuncio ' + n + ' copiado al portapapeles');
+  }).catch(() => {
+    // Fallback
+    const ta = document.createElement('textarea');
+    ta.value = anuncios[n];
+    document.body.appendChild(ta);
+    ta.select();
+    document.execCommand('copy');
+    document.body.removeChild(ta);
+    toast('📋 Anuncio ' + n + ' copiado');
+  });
+}
+
+// ═══ FIREBASE ACTIONS ═══
+function syncToFirebase() {
+  toast('Abre Firebase_Uploader.html para subir los 199 modelos');
+}
+
+function checkFirebase() {
+  document.getElementById('fbLog').textContent += '\n🔍 Abre Firebase_Uploader.html y usa el botón "Verificar"';
+}
+
+function downloadBackup() {
+  const data = {
+    productos: productos,
+    exportDate: new Date().toISOString(),
+    source: 'DATESEG MX Centro de Mando'
+  };
+  const blob = new Blob([JSON.stringify(data, null, 2)], {type: 'application/json'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'DATESEG_Backup_' + new Date().toISOString().split('T')[0] + '.json';
+  a.click();
+  toast('💾 Backup descargado');
+}
+
+// ═══ INIT ═══
+renderProducts();
+renderPinouts();
+</script>
+</body>
+</html>
